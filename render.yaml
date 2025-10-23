@@ -38,7 +38,8 @@ services:
     schedule: "0 * * * *" # hourly
     env: node
     buildCommand: |
-      npm ci
+      npm install --no-audit --no-fund
+      npx prisma generate
     startCommand: npm run sync:inventory
     envVars:
       - key: DATABASE_URL
