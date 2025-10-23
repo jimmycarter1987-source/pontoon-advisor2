@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model InventoryItem {
+  id            String   @id @default(cuid())
+  externalId    String?  @unique
+  brand         String
+  model         String
+  year          Int?
+  lengthFt      Int
+  beamIn        Int?
+  toonType      String
+  maxPersons    Int
+  hp            Int
+  engineBrand   String
+  fuel          String?
+  color         String?
+  hull          String?
+  hours         Int?
+  stockNumber   String?
+  serialNumber  String?
+  condition     String?
+  status        String?
+  msrp          Int
+  salePrice     Int
+  available     Boolean  @default(true)
+  location      String
+  city          String?
+  state         String?
+  imageUrl      String?
+  description   String?
+  featuresCsv   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  images        InventoryImage[]
+
+  @@index([brand, model])
+  @@index([status, available])
+}
+
+model InventoryImage {
+  id        String         @id @default(cuid())
+  url       String
+  itemId    String
+  item      InventoryItem  @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model Addon {
+  code      String   @id
+  name      String
+  price     Int
+  taxable   Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AprTier {
+  id      String @id @default(cuid())
+  tier    String
+  term    Int
+  apr     Float
+
+  @@unique([tier, term])
+  @@index([tier, term])
+}
+
+model TermMinimum {
+  term   Int    @id
+  amount Int
+}
+
+model Quote {
+  id             String   @id @default(cuid())
+  customerName   String?
+  customerEmail  String?
+  customerPhone  String?
+  itemId         String?
+  payloadJson    Json
+  createdAt      DateTime @default(now())
+}
