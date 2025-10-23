@@ -55,7 +55,7 @@ export async function syncInventoryFromFeed() {
     const hp = toNum(it?.engine_power || it?.horsepower || it?.hp, 150);
 
     const msrpRaw = toNum(it?.list_price || it?.price);
-    the const saleRaw = toNum(it?.sale_price || it?.price);
+    const saleRaw = toNum(it?.sale_price || it?.price);
     const year = toNum(it?.year) || undefined;
 
     const hours = toNum(it?.hours) || undefined;
