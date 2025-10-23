@@ -12,7 +12,7 @@ services:
       npm install --no-audit --no-fund
       npx prisma generate
       npm run build
-    startCommand: npm start
+    startCommand: npx prisma migrate deploy && npm start
     envVars:
       - key: DATABASE_URL
         fromDatabase:
