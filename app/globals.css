@@ -1,0 +1,5 @@
+/* app/globals.css */
+/* keep or remove Tailwind later; not required for build */
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
