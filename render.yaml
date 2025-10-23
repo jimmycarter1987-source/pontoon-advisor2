@@ -9,9 +9,9 @@ services:
     env: node
     plan: starter
     buildCommand: |
-      npm ci
+      npm install --no-audit --no-fund
+      npx prisma generate
       npm run build
-      npm run migrate:prod
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
