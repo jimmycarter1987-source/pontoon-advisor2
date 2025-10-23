@@ -1,7 +1,6 @@
+// app/admin/page.tsx
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button"; // if you don't have shadcn, replace with plain <button>
-import { Input } from "@/components/ui/input";   // same note as above
 
 type AprRow = { term: number; apr: number };
 type AprMatrix = Record<"Excellent"|"Good"|"Fair", AprRow[]>;
@@ -46,19 +45,19 @@ export default function AdminPage() {
       <section className="space-y-2">
         <h2 className="font-medium">APR Matrix</h2>
         {(["Excellent","Good","Fair"] as const).map(tier=>(
-          <div key={tier} className="border rounded p-3 space-y-2">
+          <div key={tier} className="border rounded p-3 space-y-2 bg-white">
             <p className="text-sm font-medium">{tier}</p>
             {(cfg.aprMatrix[tier]||[]).map((row,i)=>(
               <div key={i} className="grid grid-cols-3 gap-2 items-center">
                 <label className="text-xs">Term (mo)
-                  <Input type="number" value={row.term}
+                  <input className="border rounded px-2 py-1 w-full" type="number" value={row.term}
                     onChange={e=>{
                       const term = +e.target.value;
                       setCfg(c=>({...c!, aprMatrix:{...c!.aprMatrix, [tier]: c!.aprMatrix[tier].map((r,idx)=> idx===i?{...r,term}:r)}}));
                     }}/>
                 </label>
                 <label className="text-xs">APR %
-                  <Input type="number" step="0.01" value={row.apr}
+                  <input className="border rounded px-2 py-1 w-full" type="number" step="0.01" value={row.apr}
                     onChange={e=>{
                       const apr = +e.target.value;
                       setCfg(c=>({...c!, aprMatrix:{...c!.aprMatrix, [tier]: c!.aprMatrix[tier].map((r,idx)=> idx===i?{...r,apr}:r)}}));
@@ -81,10 +80,10 @@ export default function AdminPage() {
         {Object.entries(cfg.minAmountByTerm).sort(([a],[b])=>+a-+b).map(([term,min])=>(
           <div key={term} className="grid grid-cols-3 gap-2 items-center">
             <label className="text-xs">Term (mo)
-              <Input type="number" value={term} disabled/>
+              <input className="border rounded px-2 py-1 w-full" type="number" value={term} disabled/>
             </label>
             <label className="text-xs">Min Amount $
-              <Input type="number" value={min}
+              <input className="border rounded px-2 py-1 w-full" type="number" value={min}
                 onChange={e=>{
                   const v = +e.target.value;
                   setCfg(c=>({...c!, minAmountByTerm:{...c!.minAmountByTerm, [term]: v}}));
@@ -102,8 +101,10 @@ export default function AdminPage() {
 
       {error && <p className="text-rose-600 text-sm">{error}</p>}
       <div className="flex gap-2">
-        <Button onClick={save} disabled={saving}>{saving ? "Saving…" : "Save"}</Button>
-        <Button variant="outline" onClick={load}>Reload</Button>
+        <button onClick={save} disabled={saving} className="border px-3 py-1.5 rounded bg-white">
+          {saving ? "Saving…" : "Save"}
+        </button>
+        <button onClick={load} className="border px-3 py-1.5 rounded bg-white">Reload</button>
       </div>
     </div>
   );
