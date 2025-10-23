@@ -2,10 +2,9 @@
   "name": "pontoon-advisor",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+       "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3000",
-    "migrate:prod": "prisma migrate deploy",
     "sync:inventory": "tsx scripts/sync-inventory.ts"
   },
   "dependencies": {
