@@ -9,7 +9,7 @@ services:
     env: node
     plan: starter
     buildCommand: |
-      npm ci
+      npm install --no-audit --no-fund
       npm run build
       npm run migrate:prod
     startCommand: npm start
@@ -38,7 +38,7 @@ services:
     schedule: "0 * * * *" # hourly
     env: node
     buildCommand: |
-      npm ci
+      npm install --no-audit --no-fund
     startCommand: npm run sync:inventory
     envVars:
       - key: DATABASE_URL
