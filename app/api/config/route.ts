@@ -13,14 +13,23 @@ export async function GET() {
 
 export async function PUT(req: Request) {
   const { aprMatrix, minAmountByTerm } = await req.json();
+
   for (const tier of ["Excellent","Good","Fair"] as const) {
-    const rows = aprMatrix?.[tier] ?? [];
+    const rows = (aprMatrix?.[tier] ?? []) as { term: number; apr: number }[];
     await prisma.aprTier.deleteMany({ where: { tier } });
-    if (rows.length) await prisma.aprTier.createMany({ data: rows.map((r: any) => ({ tier, term: +r.term, apr: +r.apr })) });
+    if (rows.length) {
+      await prisma.aprTier.createMany({
+        data: rows.map(r => ({ tier, term: Number(r.term), apr: Number(r.apr) }))
+      });
+    }
   }
+
   await prisma.termMinimum.deleteMany();
-  for (const [termStr, amount] of Object.entries(minAmountByTerm ?? {})) {
-    await prisma.termMinimum.create({ data: { term: +termStr, amount: +amount } });
+  for (const [termStr, amount] of Object.entries((minAmountByTerm ?? {}) as Record<string, number>)) {
+    await prisma.termMinimum.create({
+      data: { term: Number(termStr), amount: Number(amount) }
+    });
   }
+
   return NextResponse.json({ ok: true });
 }
