@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { buildQuotePdfText } from "../../../lib/pdf";  // <-- relative path
+import { buildQuotePdfText } from "../../../lib/pdf";
 
 export async function POST(req: Request) {
   try {
@@ -10,8 +10,15 @@ export async function POST(req: Request) {
       `Amount financed: $${Math.round(totals.amountToFinance).toLocaleString()}`,
       `Est. monthly (${totals.effectiveTerm} mo @ ${totals.aprUsed?.toFixed?.(2)}%): $${Math.round(totals.payment).toLocaleString()}`
     ];
-    const pdf = await buildQuotePdfText(`Quote for ${answers?.name || "Customer"}`, lines, "Subject to lender approval.");
-    return new NextResponse(pdf, { headers: { "Content-Type": "application/pdf" } });
+
+    const pdf = await buildQuotePdfText(
+      `Quote for ${answers?.name || "Customer"}`,
+      lines,
+      "Subject to lender approval."
+    );
+
+    // ✅ Use the web Response for Buffer bodies
+    return new Response(pdf, { headers: { "Content-Type": "application/pdf" } });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
