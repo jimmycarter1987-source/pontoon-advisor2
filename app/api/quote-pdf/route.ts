@@ -11,14 +11,24 @@ export async function POST(req: Request) {
       `Est. monthly (${totals.effectiveTerm} mo @ ${totals.aprUsed?.toFixed?.(2)}%): $${Math.round(totals.payment).toLocaleString()}`
     ];
 
-    const pdf = await buildQuotePdfText(
+    const pdfBuffer = await buildQuotePdfText(
       `Quote for ${answers?.name || "Customer"}`,
       lines,
       "Subject to lender approval."
     );
 
-    // ✅ Use the web Response for Buffer bodies
-    return new Response(pdf, { headers: { "Content-Type": "application/pdf" } });
+    // Convert the Buffer into an ArrayBuffer for the Web Response API
+    const pdfArrayBuffer = pdfBuffer.buffer.slice(
+      pdfBuffer.byteOffset,
+      pdfBuffer.byteOffset + pdfBuffer.byteLength
+    ) as ArrayBuffer;
+
+    return new Response(pdfArrayBuffer, {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Length": pdfBuffer.byteLength.toString()
+      }
+    });
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
